@@ -1,2 +1,3 @@
 music/frontend/node_modules
+node_modules/
 ./music/frontend/static/js
