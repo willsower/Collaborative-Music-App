@@ -11,6 +11,7 @@ export default class HomePage extends Component {
         this.state = {
             roomCode: null
         };
+        this.clearRoomCode = this.clearRoomCode.bind(this);
     }
 
     // Check the life cycle before react code loads
@@ -49,6 +50,13 @@ export default class HomePage extends Component {
         );
     }
 
+    // Make sure our room / state is cleared => reset state
+    clearRoomCode() {
+        this.setState({
+            roomCode: null,
+        });
+    }
+
     // React that creates home page (from render Home Page) and facilitates the anchor tags
     render() {
         return (
@@ -59,7 +67,12 @@ export default class HomePage extends Component {
                     }}/>
                     <Route path = "/join" component = {RoomJoinPage}></Route>
                     <Route path = "/create" component = {CreateRoomPage}></Route>
-                    <Route path = "/room/:roomCode" component = {Room}/>
+                    <Route 
+                        path = "/room/:roomCode" 
+                        render = {(props) => {
+                            return <Room {...props} leaveRoomCallback = {this.clearRoomCode}></Room>;
+                        }}
+                    />
                 </Switch>
             </Router>
         )
