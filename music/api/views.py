@@ -4,6 +4,7 @@ from .serializers import RoomSerializer, CreateRoomSerializer
 from .models import Room 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
@@ -85,3 +86,15 @@ class CreateRoomView(APIView):
                 self.request.session['room_code'] = room.code
 
             return Response(RoomSerializer(room).data)
+
+class UserInRoom(APIView):
+    def get(self, request, format = None):
+        # If the user does not have a session, create one
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        data = {
+            "code": self.request.session.get("room_code")
+        }
+
+        return JsonResponse(data, status = status.HTTP_200_OK)

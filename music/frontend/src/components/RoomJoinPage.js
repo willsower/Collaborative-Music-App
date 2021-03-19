@@ -3,6 +3,7 @@ import { TextField, Button, Grid, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 export default class RoomJoinPage extends Component {
+    // Constructor that sets state and binds functions (so we can use this.func)
     constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +14,7 @@ export default class RoomJoinPage extends Component {
         this.roomButtonPressed = this.roomButtonPressed.bind(this);
     }
 
+    // Basic React code that renders join room page for a user
     render() {
         return (
             <Grid container spacing = {1}>
