@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Grid, Button, Typography } from '@material-ui/core';
+import CreateRoomPage from './CreateRoomPage';
 
 export default class Room extends Component {
     constructor(props) {
@@ -8,10 +9,14 @@ export default class Room extends Component {
             votesToSkip: 2,
             guestCanPause: false,
             isHost: false,
+            showSettings: false,
         };
         this.roomCode = this.props.match.params.roomCode;
         this.getRoomDetails();
         this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
+        this.updateShowSettings = this.updateShowSettings.bind(this);
+        this.renderSettings = this.renderSettings.bind(this);
+        this.renderSettingsButton = this.renderSettingsButton.bind(this);
     }
 
     // Gets room details and sets to variables
@@ -46,8 +51,51 @@ export default class Room extends Component {
         });
     }
 
+    // Change state of settings
+    updateShowSettings(value) {
+        this.setState({
+            showSettings: value,
+        });
+    }
+
+    renderSettings() {
+        return (
+            <Grid container spacing = {1}>
+                <Grid item xs = {12} align = "center">
+                    <CreateRoomPage 
+                        update = {true} 
+                        votesToSkip = {this.state.votesToSkip} 
+                        guestCanPause = {this.stateguestCanPause} 
+                        roomCode = {this.roomCode} 
+                        updateCallback = {null}>
+                    </CreateRoomPage>
+                </Grid>
+                <Grid item xs = {12} align = "center">
+                    <Button variant = "contained" color = "secondary" onClick = {() => this.updateShowSettings(false)}>
+                        Close
+                    </Button>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    // Creating this seperate since we only want to display
+    // this view if you are host
+    renderSettingsButton() {
+        return (
+            <Grid item xs = {12} align = "center">
+                <Button variant = "contained" color = "primary" onClick = {() => this.updateShowSettings(true)}>
+                    Settings
+                </Button>
+            </Grid>
+        );
+    }
+
     // React code that renders basic template of room
     render() {
+        if (this.state.showSettings) {
+            return this.renderSettings();
+        }
         return (
             <Grid container spacing = {1}>
                 <Grid item xs = {12} align = "center">
@@ -70,6 +118,7 @@ export default class Room extends Component {
                         Host: {this.state.isHost.toString()}
                     </Typography>
                 </Grid>
+                {this.state.isHost ? this.renderSettingsButton() : null}
                 <Grid item xs = {12} align = "center">
                     <Button color = "secondary" variant = "contained" onClick = {this.leaveButtonPressed}>
                         Leave Room
